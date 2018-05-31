@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Synopsis</title>
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/synopsis.css" rel="stylesheet">
+
+  <link href="vendor/leaflet/leaflet.css" rel="stylesheet">
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <link href="vendor/lightbox/lightbox.css" rel="stylesheet">
+
+  <link href="css/file_reader.css" rel="stylesheet">
+
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<div id="loading_bar" class="loading" style="visibility:hidden">Loading&#8230;</div>
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="font-family:Source Sans Pro; letter-spacing:0.2ch" id="mainNav">
+    <a class="navbar-brand navbar-text" href="index.html">Synopsis <small>by Exabeam</small></a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <div class="filters-group">
+                <input class="textfield filter__search js-shuffle-search" type="search" id="filters-search-input" placeholder="Search to Filter Cards.."/>
+              </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content-wrapper">
+    <div class="container mb-4">
+        <div id="file_upload" style="visibility:visible">
+                  <div  class="grid__brick mt-3 col-6 col-md-4 col-xl-12" >
+                      <div class="card mb-3 h-100">
+                          <div class="card-header">
+                            <i class="fa fa-bar-chart"></i> File Upload
+                          </div>
+
+                          <div class="card-body" style="margin-top:10px">
+                              <blink>
+                                <input class="inputfile" type='file' name='file' id='file' />
+                                <br>
+                                <div id='progress' />
+                              </blink>
+                          </div>
+                        </div>
+                  </div>
+           </div>
+        <div id="post_upload" style="visibility:hidden">
+        <div id="grid" class="my-shuffle-container row" >
+
+
+
+             <div id="activity_by_domain"  class="grid__brick mt-3 col-6 col-md-4 col-xl-8" >
+                  <div class="card mb-3 h-100">
+                      <div class="card-header">
+                        <i class="fa fa-bar-chart"></i> Activity by Domain
+                      </div>
+                      <div id="scrollable-dropdown-menu" style="margin-top:15px; z-index:3; margin-left:15px">
+                        <input id="website_selection" class="typeahead" type="text" placeholder="Websites">
+                        <i onclick="add_chart_to_card()" class="fa fa-plus" style="cursor: pointer;position: absolute;margin-top: 2px; margin-left: 10px;"></i>
+                      </div>
+                      <div class="card-body" id="list_of_bars" style="margin-top:10px;overflow-y: scroll;max-height: 450px;">
+                      </div>
+                    </div>
+              </div>
+
+             <div id="preferences_data_group"  class="grid__brick mt-3 col-6 col-md-4 col-xl-4" style="height:540px">
+
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-expeditedssl"></i> Browser Account Info</div>
+                    <div class="card-body">
+
+                        <div class="profile-userpic">
+                            <img id="profile_picture" class="img-responsive" alt="">
+                          </div>
+                          <div class="profile-usertitle" >
+                            <div class="profile-usertitle-name" id="full_name"></div>
+                            <div class="profile-usertitle-job" id="email"></div>
+                            <div class="unique_websites" id="u_web"></div>
+                            <div class="unique_words" id="u_words"></div>
+                            <div class="unique_geolocation" id="u_geo"></div>
+                            <div class="unique_extracted" id="u_ext"></div>
+                            <div class="unique_devices" id="u_dev"></div>
+                          </div>
+                    </div>
+                  </div>
+             </div>
+
+             <div data-groups="['all','web','activity']" class="grid__brick mt-3 col-6 col-md-4 col-xl-12" >
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-bar-chart"></i> All Web Activity
+                    </div>
+                    <canvas id="web_activity_area_chart"></canvas>
+
+                    </div>
+             </div>
+
+             <div data-groups='["time","monday","tuesday","wednesday","thursday","friday","saturday","sunday"]' class="grid__brick mt-3 col-6 col-md-2 col-xl-12">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-calendar"></i> Time of Week Activity</div>
+                    <div class="card-body">
+                      <!--<canvas id="time_of_week" width="250" height="534" style="max-height:520px"></canvas>-->
+                      <div id="chart"></div>
+                    </div>
+                  </div>
+            </div>
+
+
+            <div id="query_data_group" class="grid__brick mt-3 col-6 col-md-4 col-xl-8" style="height:316px">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-question-circle"></i> Search Queries</div>
+                    <div class="card-body">
+                       <div class="table-responsive" style="margin-top:15px">
+                        <table class="table" id="dataTable_query"  cellspacing="0">
+                        <thead>
+                          <tr>
+                            <th>Time</th>
+                            <th>Queries</th>
+                          </tr>
+                        </thead>
+
+                        <tbody style="word-break:break-all"  id="tab_query"></tbody>
+                      </table>
+                    </div>
+                    </div>
+                  </div>
+            </div>
+
+            <div id="search_engine_queries_shuffle"  class="grid__brick mt-3 col-6 col-md-4 col-xl-4" style="height:315px">
+                  <div class="card mb-3 h-100">
+                      <div class="card-header">
+                        <i class="fa fa-search-plus"></i> Search Engine Queries</div>
+                      <div class="card-body">
+                          <!--<img id="word-cloud-img" style="width:100%; height:500px">-->
+                          <a id="word-cloud-img" data-lightbox="image-1" style="width:100%; height:260px">
+                            <img id="word-cloud-img2" style="width:100%; height:220px">
+                              <p style="text-align:center">Click on the image above. </p>
+                          </a>
+
+                      </div>
+                    </div>
+             </div>
+
+            <div id="auto_fill_queries_shuffle"  class="grid__brick mt-3 col-6 col-md-4 col-xl-4" style="height:315px">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-search-minus"></i> Autofill Values</div>
+                    <div class="card-body">
+                        <!--<img id="word-cloud-img" style="width:100%; height:500px">-->
+                        <a id="word-cloud-img-autofill" data-lightbox="image-1" style="width:100%; height:260px">
+                          <img id="word-cloud-img-autofill2" style="width:100%; height:220px">
+                            <p style="text-align:center">Click on the image above. </p>
+                        </a>
+
+                    </div>
+                  </div>
+           </div>
+
+           <div id="autofill_data_group" class="grid__brick mt-3 col-6 col-md-4 col-xl-8">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-pie-chart"></i> Autofill Entries</div>
+                    <div class="card-body">
+                       <div class="table-responsive" style="margin-top:15px">
+                        <table class="table " id="autofill_data_table_declaration"  cellspacing="0">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>Count</th>
+                          </tr>
+                        </thead>
+
+                        <tbody style="word-break:break-all"  id="mytab3"></tbody>
+                      </table>
+                    </div>
+                    </div>
+                  </div>
+            </div>
+
+            <div id="geolocation_shuffle"  class="grid__brick mt-3 col-6 col-md-4 col-xl-6">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-location-arrow"></i> Geolocation</div>
+                    <div class="card-body">
+                        <div id="mapid"></div>
+                    </div>
+                  </div>
+             </div>
+
+             <div id="devices_data_group" class="grid__brick mt-3 col-6 col-md-4 col-xl-6" style="height:580px">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-desktop"></i> Devices</div>
+                    <div class="card-body">
+                       <div class="table-responsive" style="margin-top:15px">
+                        <table class="table " id="devices_table_declaration"  cellspacing="0">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>IP</th>
+                            <th>Model</th>
+                            <th>Networks</th>
+                          </tr>
+                        </thead>
+
+                        <tbody style="word-break:break-all"  id="mytab4"></tbody>
+                      </table>
+                    </div>
+                    </div>
+                  </div>
+            </div>
+
+            <div id="extracted_accounts" class="grid__brick mt-3 col-6 col-md-4 col-xl-4" style="height:291px">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-camera-retro"></i> Extracted Accounts</div>
+                    <div class="card-body" style="margin-top:15px">
+
+                      <div class="table-responsive">
+                        <table class="table" id="extracted_accounts_datatable"  style="word-break:break-all" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th style="width:150px">Account</th>
+                              <th>Domain</th>
+
+                            </tr>
+                          </thead>
+
+                          <tbody id="extracted_accounts_collection"></tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+            <div id="websites_data_group" class="grid__brick mt-3 col-6 col-md-4 col-xl-8">
+                <div class="card mb-3 h-100">
+                    <div class="card-header">
+                      <i class="fa fa-mouse-pointer"></i> Visited Domains
+                      </div>
+                    <div class="card-body">
+
+                       <div class="table-responsive" style="margin-top:15px">
+                        <table class="table " id="websites_visited_table"  cellspacing="0">
+                        <thead>
+                          <tr>
+                              <th>Time</th>
+                            <th>Domain</th>
+                            <th>URL</th>
+                          </tr>
+                        </thead>
+
+                        <tbody style="word-break:break-all"  id="mytab5"></tbody>
+                      </table>
+                    </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-1 my-sizer-element"></div>
+
+       </div>
+        </div>
+  </div>
+
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Synopsis</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+
+    <!--
+
+
+Copyright 2018 Exabeam, Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+   http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ 
+    -->
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+     <script src="vendor/moment/moment.js"></script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.js"></script>
+    <script src="vendor/d3/d3.v4.js"></script>
+
+
+    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="vendor/shuffle/shuffle.js"> </script>
+    <script src="vendor/typeahead/typeahead.bundle.js"></script>
+    <script src="vendor/lightbox/lightbox.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level plugin JavaScript-->
+
+    <script src="js/helpers.js"></script>
+    <script src="js/heatmap.js"></script>
+    <script src="js/activity_by_domain.js"></script>
+    <script src="js/preferences.js"></script>
+    <script src="js/all_activity_bar_chart.js"></script>
+    <script src="js/word_cloud_searches.js"></script>
+    <script src="js/syn_geo.js"></script>
+    <script src="js/extracted_accounts.js"></script>
+    <script src="js/autofill_data_table.js"></script>
+    <script src="js/devices_data.js"></script>
+    <script src="js/search_queries.js"></script>
+    <script src="js/all_websites_visited.js"></script>
+    <script src="js/page_functions.js"></script>
+    <script src="js/file_reader.js"></script>
+    <script src="js/grid_sorting.js"></script>
+
+    <!-- Custom scripts for this page-->
+
+
+
+
+
+  </div>
+  </div>
+  </div>
+
+</body>
+
+</html>

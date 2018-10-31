@@ -2,5 +2,5 @@ keyring==10.4.0
 leveldb==0.194
 matplotlib==2.0.0
 pandas==0.22.0
-requests==2.11.1
+requests==2.20.0
 wordcloud==1.2.1
